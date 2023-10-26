@@ -1,0 +1,47 @@
+@model MovieReview.Models.Api;
+@{ ViewData["Title"] = "Movies";
+}
+<div class="col-md-6">
+    <hr>   
+                <img style="height :300px; width :200px;" src="@Model.Poster" alt="Movie Poster" class="img-fluid">
+            
+            <hr>
+        </div>
+<div class="container">
+    <div class="row">
+            
+            <h1 class="Title">Movie Name:@Model.Title</h1>
+            <h1> IMDB Ratings: @Model.imdbRating</h1>
+            <div class="Content">
+                
+                <h3>Released: @Model.Year</h3>
+                <h3>Rated: @Model.Rated</h3>
+                <h3>Language: @Model.Language</h3>
+                <h3>Actor: @Model.Actors</h3>
+                <h3>Made in: @Model.Country</h3>
+                <h3>Ratings: 
+                    @foreach(var ratings in @Model.Ratings){
+                        <ul><li>@ratings.Source: @ratings.Value</li></ul>
+                    }
+                    </h3>
+                <hr>
+            </div>
+            <div class="Summary">
+                <h4>
+                Summary
+                </h4>
+                <p>@Model.Plot</p>
+                <hr>
+            </div class = "Review">
+
+            <div>
+
+            </div>
+           
+        
+        
+        
+    </div>
+
+
+</div>

@@ -1,0 +1,70 @@
+@model MovieReview.Models.Api
+<head>
+    <link rel="stylesheet" href="~/wwwroot/css/site.css">
+</head>
+<script src="~/wwwroot/js/site.js"></script>
+@if(Model!=null){
+    <img src="@Model.Poster" alt="Unavailable poster">
+    <h1>@Model.Title</h1>
+    <p><strong>Ratings:</strong> @Model.imdbRating</p>
+    <p><strong>Year:</strong> @Model.Year</p>
+    <p><strong>Rated:</strong> @Model.Rated</p>
+    <p><strong>Genre:</strong> @Model.Genre</p>
+    <p><strong>Director:</strong> @Model.Director</p>
+    <p><strong>Actors:</strong> @Model.Actors</p>
+    <p><strong>Country:</strong> @Model.Country</p>
+    <p><strong>Language: </strong>@Model.Language</p>
+    <p><strong>Ratings: </strong>
+    @foreach(var ratings in @Model.Ratings){
+        <ul><li>@ratings.Source: @ratings.Value</li></ul>
+    }
+    
+    </p>
+    <p><strong>Plot: </strong>@Model.Plot</p> 
+    <hr>
+    <h3>Reviews</h3>
+    @if(Model.Comments==null){
+        <p>No Review yet</p>
+    }
+    else{
+        <p>@Model.Comments</p>
+    }
+    
+}
+else{
+    <p>Movie not found</p>
+}
+
+
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container">
+	<div class="row" style="margin-top:40px;">
+		<div class="col-md-6">
+    	<div class="well well-sm">
+            <div class="text-right">
+                <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
+            </div>
+        
+            <div class="row" id="post-review-box" style="display:none;">
+                <div class="col-md-12">
+                    <form accept-charset="UTF-8" action="" method="post">
+                        <input id="ratings-hidden" name="rating" type="hidden"> 
+                        <textarea class="form-control animated" cols="50" id="new-review" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
+        
+                        <div class="text-right">
+                            <div class="stars starrr" data-rating="0"></div>
+                            <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
+                            <span class="glyphicon glyphicon-remove"></span>Cancel</a>
+                            <button class="btn btn-success btn-lg" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div> 
+         
+		</div>
+	</div>
+</div>
+
+<!-- Add more movie details here -->
