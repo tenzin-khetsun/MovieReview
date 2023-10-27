@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
+
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System.ComponentModel.DataAnnotations.Schema;
 namespace MovieReview.Models{
 
 public class Rating
@@ -66,7 +65,7 @@ public class Rating
         [BsonElement("response")]
         public string? Response { get; set; }
         [BsonElement("review")]
-        public List<Review> ?Comments{ get; set; }
+        public List<Review>? Comments{ get; set; }
         
     }
     }

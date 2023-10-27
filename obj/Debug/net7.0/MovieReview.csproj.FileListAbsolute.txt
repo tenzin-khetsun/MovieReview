@@ -88,3 +88,5 @@
 /Users/30111698/Desktop/MovieReview/bin/Debug/net7.0/runtimes/linux/native/libmongocrypt.so
 /Users/30111698/Desktop/MovieReview/bin/Debug/net7.0/runtimes/osx/native/libmongocrypt.dylib
 /Users/30111698/Desktop/MovieReview/bin/Debug/net7.0/runtimes/win/native/mongocrypt.dll
+/Users/30111698/Desktop/MovieReview/bin/Debug/net7.0/BCrypt.Net-Next.dll
+/Users/30111698/Desktop/MovieReview/bin/Debug/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll

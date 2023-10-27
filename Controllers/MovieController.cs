@@ -4,6 +4,7 @@ using MovieReview.Models;
 using Microsoft.AspNetCore.Mvc;
 using MovieReview.Services;
 using LoginDb.Interface;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieReview.Controllers{
     public class MovieController : Controller{
@@ -25,6 +26,7 @@ namespace MovieReview.Controllers{
             Console.WriteLine(req);
             return View(req);
         }
+
     }
 }
 

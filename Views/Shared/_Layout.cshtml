@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿
+@{
+    var tokenCookies = Context.Request.Cookies["Token"];
+    var roleCookies = Context.Request.Cookies["Token"];
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,14 +30,41 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Genre">Genre</a>
                         </li>
-                    </ul>
-                    <div>
+                        @if(roleCookies != null){
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="AddMovie">Add Movie</a>
+                            </li>
+                        }
+                        
+                        <li class="nav-item mx-auto">
+                            <div>
                             @using (Html.BeginForm("Search", "Movie", FormMethod.Get))
-                    {
-                        <input class="rounded" type="text" name="query" placeholder="Search movies">
-                        <button class="btn btn-primary"type="submit">Search</button>
-                    }
+                            {
+                            <input class="rounded" type="text" name="query" placeholder="Search movies">
+                            <button class="btn btn-primary"type="submit">Search</button>
+                            }
                     </div>
+                        </li>
+                        @if(tokenCookies == null)
+                        {
+                         <li class="nav-item ms-auto">
+                            <button class="btn btn-outline-success btn-sm">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login"><strong>Login</strong></a>
+                            </button>
+                        </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item ms-auto">
+                                <button class="btn btn-outline-danger btn-sm">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout"><strong>Logout</strong></a>
+
+                                </button>
+                        </li>
+                        }
+                        
+                    </ul>
+                    
                     <div class="form-outline">
                     
                     </div>

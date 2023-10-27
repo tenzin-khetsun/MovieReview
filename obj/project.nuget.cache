@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "O//w8EeWny5HpleEVgRNJnoHMbdWEwzFb4/aEfye7IG2Gd/b8u3iJJ9hlyW9h3JVmAV8TE7c1GGLz8qnMKqzyQ==",
+  "dgSpecHash": "looidvhLtmVQF+eQ/3THeFuekiHeau7QL6jx3dDvOs7GIVJpUbjRfBuCyKDRdtWMu21LSGxHQVfKS0uclYr1ZQ==",
   "success": true,
   "projectFilePath": "/Users/30111698/Desktop/MovieReview/MovieReview.csproj",
   "expectedPackageFiles": [
@@ -8,8 +8,10 @@
     "/Users/30111698/.nuget/packages/awssdk.securitytoken/3.7.100.14/awssdk.securitytoken.3.7.100.14.nupkg.sha512",
     "/Users/30111698/.nuget/packages/azure.core/1.25.0/azure.core.1.25.0.nupkg.sha512",
     "/Users/30111698/.nuget/packages/azure.identity/1.7.0/azure.identity.1.7.0.nupkg.sha512",
+    "/Users/30111698/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/30111698/.nuget/packages/dnsclient/1.6.1/dnsclient.1.6.1.nupkg.sha512",
     "/Users/30111698/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
+    "/Users/30111698/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/7.0.13/microsoft.aspnetcore.authentication.jwtbearer.7.0.13.nupkg.sha512",
     "/Users/30111698/.nuget/packages/microsoft.bcl.asyncinterfaces/1.1.1/microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "/Users/30111698/.nuget/packages/microsoft.csharp/4.5.0/microsoft.csharp.4.5.0.nupkg.sha512",
     "/Users/30111698/.nuget/packages/microsoft.data.sqlclient/5.1.1/microsoft.data.sqlclient.5.1.1.nupkg.sha512",

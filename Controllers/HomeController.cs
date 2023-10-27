@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using CinePhile.Database;
 using MongoDB.Driver;
 using Azure;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieReview.Controllers;
 
@@ -37,7 +38,11 @@ public class HomeController : Controller
 
     public IActionResult Genre()
     {
-        return View();
+        if(Request.Cookies.ContainsKey("Token"))
+        {
+            return View();
+        }
+        return RedirectToAction("Index");
     }
 
 }
