@@ -1,42 +1,93 @@
-@model MovieReview.Models.Api
+@model MovieReview.Models.ViewPage
+
+@inject IConfiguration _configuration
+
+@functions{
+    public string? ValidateToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+    {
+        return null;
+    }
+
+        var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+        var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+
+        var validationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = key
+            };
+
+        Microsoft.IdentityModel.Tokens.SecurityToken validatedToken;
+        var principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+        string role = principal.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value!;
+        return role;
+        }
+}
+@{
+    var tokenCookies = Context.Request.Cookies["Token"];
+    var userRole = ValidateToken(tokenCookies);
+    
+}
+
+
+
+
+
 <head>
     <link rel="stylesheet" href="~/wwwroot/css/site.css">
 </head>
-<script src="~/wwwroot/js/site.js"></script>
 @if(Model!=null){
-    <img src="@Model.Poster" alt="Unavailable poster">
-    <h1>@Model.Title</h1>
-    <p><strong>Ratings:</strong> @Model.imdbRating</p>
-    <p><strong>Year:</strong> @Model.Year</p>
-    <p><strong>Rated:</strong> @Model.Rated</p>
-    <p><strong>Genre:</strong> @Model.Genre</p>
-    <p><strong>Director:</strong> @Model.Director</p>
-    <p><strong>Actors:</strong> @Model.Actors</p>
-    <p><strong>Country:</strong> @Model.Country</p>
-    <p><strong>Language: </strong>@Model.Language</p>
-    <p><strong>Ratings: </strong>
-    @foreach(var ratings in @Model.Ratings){
-        <ul><li>@ratings.Source: @ratings.Value</li></ul>
+    <img src="@Model.movies.Poster" alt="Unavailable poster">
+    <h1>@Model.movies.Title</h1>
+    <p><strong>IMDB Ratings: </strong>@ViewBag.ImdbRating </p>
+    <p><strong>Year:</strong> @Model.movies.Year</p>
+    <p><strong>Rated:</strong> @Model.movies.Rated</p>
+    <p><strong>Genre:</strong> @Model.movies.Genre</p>
+    <p><strong>Director:</strong> @Model.movies.Director</p>
+    <p><strong>Actors:</strong> @Model.movies.Actors</p>
+    <ul>
+    @foreach(var ratings in ViewBag.PublicRating ){
+        <li ><strong>@ratings.Source:</strong> @ratings.Value</li>
     }
-    
-    </p>
-    <p><strong>Plot: </strong>@Model.Plot</p> 
+    </ul>
+    <p><strong>Plot: </strong>@Model.movies.Plot</p> 
     <hr>
-    <h3>Reviews</h3>
-    @if(Model.Comments==null){
-        <p>No Review yet</p>
-    }
-    else{
-        <p>@Model.Comments</p>
-    }
-    
+    <div>
+   @foreach(var review in Model.reviews){
+        <ul>
+            <li>
+                    <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                    <h5>@review.Ratings / 5 </h5>
+                    @* <p>IMDB id: @ViewBag.ImdbRating</p> *@
+                    <h5 class="card-title">@review.ReviewUser</h5>
+                    <p class="card-subtitle mb-2 time text-muted">@review.CreatedAt</p>
+                    <p class="card-text">@review.Content</p>
+                    
+                    
+                    </div>
+                    @if(ValidateToken(tokenCookies)=="Admin"){
+                    <form method="post" asp-controller="Review" asp-action="DeleteReview">
+                    <input type="hidden" name="reviewId" value="@review.ReviewId"/>
+                    <button class="btn btn-danger btn-sm"type="submit">Delete</button>
+                    </form>
+                    }
+                    
+                    </div>
+                
+            </li>
+            </ul>
+   }
+    </div>    
 }
 else{
     <p>Movie not found</p>
 }
-
-
-<!------ Include the above in your HEAD tag ---------->
 
 <div class="container">
 	<div class="row" style="margin-top:40px;">
@@ -48,15 +99,26 @@ else{
         
             <div class="row" id="post-review-box" style="display:none;">
                 <div class="col-md-12">
-                    <form accept-charset="UTF-8" action="" method="post">
-                        <input id="ratings-hidden" name="rating" type="hidden"> 
-                        <textarea class="form-control animated" cols="50" id="new-review" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
-        
+                    <form accept-charset="UTF-8" asp-action="CreateReview" asp-controller="Review" method="post">
+                        @* <input id="" name="rating" > Leave a rating</input> *@
+                        <input type="hidden" name="imdbID" value="@Model.movies.imdbID">
+                        @* <input type="hidden" name="imdbID" value="@Model.user.UserId"> *@
+                        <div class="review-content">
+                            <label for="">Leave a review</label>
+                            <input class="form-control animated" cols="50" id="new-review"name="Content"/>
+                        </div>
+                        <div class="review-rating">
+                            <label for="">Rate this movie out of 5</label>
+                            <input type="number" class="form-control animated" min="0" max="5" cols="6"name="Ratings"/>
+                        </div>
+                    
+                        <input type="hidden" name="rating" id="rating" value="0">
+                        
                         <div class="text-right">
-                            <div class="stars starrr" data-rating="0"></div>
+                            
                             <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
                             <span class="glyphicon glyphicon-remove"></span>Cancel</a>
-                            <button class="btn btn-success btn-lg" type="submit">Save</button>
+                            <button class="btn btn-success btn-md" type="submit">Save</button>
                         </div>
                     </form>
                 </div>
@@ -66,5 +128,6 @@ else{
 		</div>
 	</div>
 </div>
+<script src="~/wwwroot/js/site.js"></script>
 
 <!-- Add more movie details here -->

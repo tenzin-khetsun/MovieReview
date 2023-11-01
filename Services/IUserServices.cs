@@ -6,5 +6,6 @@ namespace MovieReview.Services{
         public bool RegisterMethod(User request);
         public bool LoginMethod(User request);
         public bool LogoutMethod ();
+        public string? ValidateToken(string token);
     }
 }

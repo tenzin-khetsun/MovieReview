@@ -11,8 +11,10 @@ namespace CinePhile.Database
 
         // public IMongoCollection<User> Users();
 
-        public IMongoCollection<Api> Movies();
+        public IMongoCollection<Api> ApiMovies();
+        public IMongoCollection<Movie> Movies();
         public IMongoCollection<User> Users();
+        public IMongoCollection<Review> Review();
 
     }
 

@@ -1,28 +1,29 @@
-@model MovieReview.Models.Api;
+@model IEnumerable<Movie>;
 @{ ViewData["Title"] = "Movies";
 }
-<div class="col-md-6">
+
+
+    @foreach(var movie in Model){
+        <div class="col-md-6">
     <hr>   
-                <img style="height :300px; width :200px;" src="@Model.Poster" alt="Movie Poster" class="img-fluid">
+                <img style="height :300px; width :200px;" src="@movie.Poster" alt="Movie Poster" class="img-fluid">
             
             <hr>
         </div>
-<div class="container">
-    <div class="row">
-            
-            <h1 class="Title">Movie Name:@Model.Title</h1>
-            <h1> IMDB Ratings: @Model.imdbRating</h1>
+        <div class="container">
+        <h1 class="Title">Movie Name:@movie.Title</h1>
+            @* <h1> IMDB Ratings: @Model.</h1> *@
             <div class="Content">
                 
-                <h3>Released: @Model.Year</h3>
-                <h3>Rated: @Model.Rated</h3>
-                <h3>Language: @Model.Language</h3>
-                <h3>Actor: @Model.Actors</h3>
-                <h3>Made in: @Model.Country</h3>
+                <h3>Released: @movie.Year</h3>
+                <h3>Rated: @movie.Rated</h3>
+                @* <h3>Language: @Model</h3> *@
+                <h3>Actor: @movie.Actors</h3>
+                <h3>Made in: null</h3>
                 <h3>Ratings: 
-                    @foreach(var ratings in @Model.Ratings){
+                    @* @foreach(var ratings in @Model.Ratings){
                         <ul><li>@ratings.Source: @ratings.Value</li></ul>
-                    }
+                    } *@
                     </h3>
                 <hr>
             </div>
@@ -30,18 +31,14 @@
                 <h4>
                 Summary
                 </h4>
-                <p>@Model.Plot</p>
+                <p>@movie.Plot</p>
                 <hr>
             </div class = "Review">
-
-            <div>
-
             </div>
+    }
+   }
            
         
         
         
-    </div>
-
-
-</div>
+  

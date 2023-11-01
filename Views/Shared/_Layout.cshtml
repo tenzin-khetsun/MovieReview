@@ -1,7 +1,35 @@
-﻿
+﻿@inject IConfiguration _configuration
+
+@functions{
+    public string? ValidateToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+    {
+        return null;
+    }
+
+        var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+        var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+
+        var validationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = key
+            };
+
+        Microsoft.IdentityModel.Tokens.SecurityToken validatedToken;
+        var principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+        string role = principal.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value!;
+        return role;
+        }
+}
 @{
     var tokenCookies = Context.Request.Cookies["Token"];
-    var roleCookies = Context.Request.Cookies["Token"];
+    var userRole = ValidateToken(tokenCookies);
+    
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -29,23 +57,25 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Genre">Genre</a>
-                        </li>
-                        @if(roleCookies != null){
+                        </li>       
+                        @if(ValidateToken(tokenCookies)=="Admin"){
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="AddMovie">Add Movie</a>
                             </li>
                         }
-                        
-                        <li class="nav-item mx-auto">
+                        @if(ValidateToken(tokenCookies)=="Admin"){
+                           <li class="nav-item mx-auto">
                             <div>
                             @using (Html.BeginForm("Search", "Movie", FormMethod.Get))
                             {
                             <input class="rounded" type="text" name="query" placeholder="Search movies">
                             <button class="btn btn-primary"type="submit">Search</button>
                             }
-                    </div>
-                        </li>
-                        @if(tokenCookies == null)
+                            </div>
+                        </li> 
+                        }
+                        
+                        @if(tokenCookies==null)
                         {
                          <li class="nav-item ms-auto">
                             <button class="btn btn-outline-success btn-sm">
@@ -87,6 +117,5 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

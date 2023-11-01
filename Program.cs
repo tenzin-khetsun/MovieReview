@@ -8,27 +8,17 @@ using MovieReview.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllersWithViews();
+
+
 builder.Services.AddScoped<IMovie, MovieService>();
 builder.Services.AddScoped<IDatabase,Database>();
 builder.Services.AddScoped<IUser, UserServices>();
+builder.Services.AddScoped<IReview, ReviewService>();
 builder.Services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
-builder.Services.AddAuthentication().AddJwtBearer(options=>{
-    options.TokenValidationParameters = new TokenValidationParameters{
-        ValidateIssuerSigningKey = true,
-        ValidateAudience = false,
-        ValidateIssuer = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            builder.Configuration.GetSection("AppSettings:Token").Value!
-        ))
-    };
-});
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-});
+
+
+    
 
 
 var app = builder.Build();
@@ -45,7 +35,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseStatusCodePagesWithReExecute("/Home/Unauthorized", "?statusCode={0}");
+
 
 app.MapControllerRoute(
     name: "default",

@@ -1,6 +1,7 @@
 
 using CinePhile.Database;
 using LoginDb.Interface;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MovieReview.Models;
 using Newtonsoft.Json;
@@ -9,65 +10,100 @@ using RestSharp;
 namespace MovieReview.Services
 {
     public class MovieService : IMovie {
-        private readonly IDatabase _movies;
-        public MovieService(IDatabase movies){
-            _movies = movies;
+        private readonly IDatabase _DBcontext;
+        // private readonly IDatabase _reviews;
+        public MovieService(IDatabase DBcontext){
+            _DBcontext = DBcontext;
         }
 
-        public Api SearchMethod(string query){
-            try{
-                var apiKey = "ab19245e";
-                string title = char.ToUpper(query[0]) + query.Substring(1);
-
-                // var title = query;
-                var existingMovie = _movies.Movies().Find(m => m.Title == title).FirstOrDefault();
-
-                if (existingMovie != null)
-                {
-                // If the movie already exists, return it
-                return existingMovie;
-                }
-                else{
-                    var client = new RestClient("http://www.omdbapi.com");
-                    var request = new RestRequest();
-                    request.AddParameter("apiKey", apiKey);
-                    request.AddParameter("t", title);
-                    var response = client.Execute(request);
-                    if(response.IsSuccessful){
-                        var movie = JsonConvert.DeserializeObject<Api>(response.Content);
-                        _movies.Movies().InsertOne(movie);
-                        return movie;                    
-                    }
-                    else{
-                        return null!;
-                    }
-                }
-                
-                }
-            catch(Exception ex){
-                Console.WriteLine(ex.Message);
-                return null!;
-            }       
+        public List<Movie> SearchMethod(string query){
+            var filter = Builders<Movie>.Filter.Or(
+            Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(query, "i")));
+            var result = _DBcontext.Movies().Find(filter).ToList();
+            return result;
         }
-        public Api MovieDetailsMethod(string movieId){
-            var results = _movies.Movies().Find(x => x.imdbID == movieId).FirstOrDefault(); 
+        public List<Movie> SearchByGenre(string genre){
+            var filter = Builders<Movie>.Filter.Regex("Genre",new BsonRegularExpression(genre,"i") );
+            var result = _DBcontext.Movies().Find(filter).ToList();
+            return result;
+        }
+        public List<Movie> SearchByYear(int year){
+            var filter = Builders<Movie>.Filter.Eq("Year", year);
+            var result = _DBcontext.Movies().Find(filter).ToList();
+            return result;
+        }
+        public List<Movie> GetByRequestandGenre(string request, string genre)
+        {
+            var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
+            var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(genre, "i"));
+            var MovieFilter = SearchFilter & GenreFilter;
+            var result = _DBcontext.Movies().Find(MovieFilter).ToList();
+            return result;
+        }
+        public List<Movie> GetByRequestandYear(string request, int year)
+        {
+            var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
+            var YearFilter = Builders<Movie>.Filter.Eq("Year", year);
+            var MovieFilter = SearchFilter & YearFilter;
+            var result = _DBcontext.Movies().Find(MovieFilter).ToList();
+            return result;
+        }
+        public List<Movie> GetByGenreandYear(string genre, int year)
+        {
+            var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(genre, "i"));
+            var YearFilter = Builders<Movie>.Filter.Eq("Year", year);
+            var MovieFilter = GenreFilter & YearFilter;
+            var result = _DBcontext.Movies().Find(MovieFilter).ToList();
+            return result;
+        }
+        public List<Movie> GetAll(string request, string genre, string Year)
+        {
+            var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
+            var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(genre, "i"));
+            var YearFilter = Builders<Movie>.Filter.Regex("Year", new BsonRegularExpression(Year, "i"));
+            var MovieFilter = SearchFilter & GenreFilter & YearFilter;
+            var result = _DBcontext.Movies().Find(MovieFilter).ToList();
+            return result;
+        }
+            
+        
+        public ViewPage MovieDetailsMethod(string movieId){
+            var results = _DBcontext.Movies().Find(x => x.imdbID == movieId).FirstOrDefault(); 
+            var imdbID = results.imdbID;
             if(results==null){
                 Console.WriteLine("result is empty");
             }
-            else{
-                Console.WriteLine(results);
+
+
+            
+            
+
+            ViewPage viewPage = new ViewPage{
+                movies = results,
+                reviews = _DBcontext.Review().Find(x=>x.imdbID==imdbID).ToList()
+                
+            };
+            return viewPage;
+        }
+        
+
+    public bool AddMovieMethod(Movie movierequest){
+            if(_DBcontext.Movies().Find(x=>x.imdbID==movierequest.imdbID).FirstOrDefault()==null){
+                var apiKey = "ab19245e";
+                var client = new RestClient("http://www.omdbapi.com");
+                var request = new RestRequest();
+                request.AddParameter("apiKey",apiKey);
+                request.AddParameter("i", movierequest.imdbID);
+                var response = client.Execute(request);
+                Api? MovieFromApi = JsonConvert.DeserializeObject<Api>(response.Content);
+                movierequest.Poster = MovieFromApi.Poster;
+                movierequest.Rated = MovieFromApi.Rated;
+                _DBcontext.Movies().InsertOne(movierequest);
+                return true;
             }
-            
-            
-            // var apiKey = "ab19245e";
-            // string title = char.ToUpper(movieName[0]) + movieName.Substring(1);
-            // var client = new RestClient("http://www.omdbapi.com");
-            // var request = new RestRequest();
-            // request.AddParameter("apiKey", apiKey);
-            // request.AddParameter("t", title);
-            // var response = client.Execute(request);
-            // var movie = JsonConvert.DeserializeObject<Api>(response.Content);
-            return results;
+            else{
+                return false;
+            }
         }
 
        

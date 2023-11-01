@@ -1,17 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Azure;
 using CinePhile.Database;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using MovieReview.Models;
-using MovieReview.Services;
 namespace MovieReview.Services{
     public class UserServices : IUser{
         private readonly IDatabase _users;
         private readonly IConfiguration _configuration;
-private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor; 
 
         public UserServices(IDatabase users, IConfiguration configuration,IHttpContextAccessor httpContextAccessor){
             _users = users;
@@ -23,8 +21,14 @@ private readonly IHttpContextAccessor _httpContextAccessor;
         private string CreateToken(User user){
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.Name, user.UserEmail)
+                new Claim(ClaimTypes.Name, user.UserName)
             };
+            if(user.Role=="Admin"){
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+            }
+            else{
+                claims.Add(new Claim(ClaimTypes.Role, "User"));
+            }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             var token = new JwtSecurityToken(
@@ -36,6 +40,35 @@ private readonly IHttpContextAccessor _httpContextAccessor;
             return jwt;
         }
 
+        public string? ValidateToken(string token)
+        {
+        try
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+ 
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = key
+            };
+ 
+            SecurityToken validatedToken;
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+ 
+            string role = principal.FindFirst(ClaimTypes.Role)?.Value!;
+ 
+            return role;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
         //Login method
         public bool LoginMethod(User request){  
             var cookiesOption = new CookieOptions{
@@ -46,11 +79,9 @@ private readonly IHttpContextAccessor _httpContextAccessor;
                 return false;
             }
             else if(request.UserPassword==valid.UserPassword){
-                var token = CreateToken(request);
+                var token = CreateToken(valid);
                 _httpContextAccessor?.HttpContext?.Response.Cookies.Append("Token",token,cookiesOption);
-                var user = _users.Users().Find(u => u.UserEmail == request.UserEmail).FirstOrDefault();
-                if(user.Role == "Admin")
-                    _httpContextAccessor?.HttpContext?.Response.Cookies.Append("Role",user.Role,cookiesOption);
+                // var user = _users.Users().Find(u => u.UserEmail == request.UserEmail).FirstOrDefault();
                 return true;
             }
             else{
@@ -63,7 +94,8 @@ private readonly IHttpContextAccessor _httpContextAccessor;
                 Expires = DateTime.Now.AddMinutes(-1),
             };
             _httpContextAccessor?.HttpContext?.Response.Cookies.Delete("Token");
-            return false;
+            _httpContextAccessor?.HttpContext?.Response.Cookies.Delete("Role");
+            return true;
         }
         public bool RegisterMethod(User request){
             var emailExists = _users.Users().Find(x=>x.UserEmail == request.UserEmail).SingleOrDefault();

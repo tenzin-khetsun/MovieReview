@@ -1,0 +1,85 @@
+@model MovieReview.Models.Movie;
+@* <body>
+<div class="contain">
+        <h2>Add Movie</h2>
+        <form  method="post" >
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="Year">Year:</label>
+                <input type="number" id="year" name="year" required>
+            </div>
+            <div class="form-group">
+                <label for="genre">Genre:</label>
+                <input type="text" id="genre" name="genre" required>
+            </div>
+            <div class="form-group">
+                <label for="director">Director:</label>
+                <input type="text" id="director" name="director" required>
+            </div>
+            <div class="form-group">
+                <label for="actors">Top 3 Actors:</label>
+                <input type="text" id="actors" name="actors" required>
+            </div>
+            <div class="form-group">
+                <label for="plot">Plot:</label>
+                <textarea id="plot" name="plot" required></textarea>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body> *@
+<form method="post"> 
+
+
+  <div class="form-outline mb-4">
+    <input type="text" id="title" name = "title" class="form-control" />
+    <label class="form-label" for="title">Movie Title</label>
+  </div>
+
+   <div class="form-outline mb-4">
+    <input type="text" id="imdbId" name = "imdbId" class="form-control" />
+    <label class="form-label" for="imdbId">imdb Id</label>
+  </div>
+
+  <!-- Text input -->
+  <div class="form-outline mb-4">
+    <input type="number" id="Year" name="Year"class="form-control" />
+    <label class="form-label" for="Year">Release Year</label>
+  </div>
+ 
+
+  <!-- Number input -->
+  <div class="form-outline mb-4">
+    <input type="text" id="genre" name = "genre" class="form-control" />
+    <label class="form-label" for="genre">Genre</label>
+  </div>
+
+   <div class="form-outline mb-4">
+    <input type="text" id="director" name = "director" class="form-control" />
+    <label class="form-label" for="director">Director</label>
+  </div>
+
+   <div class="form-outline mb-4">
+    <input type="text" id="actors" name="actors" class="form-control" />
+    <label class="form-label" for="actors">Actors</label>
+  </div>
+
+  <!-- Message input -->
+  <div class="form-outline mb-4">
+    <textarea class="form-control" id="plot" name="plot" rows="4"></textarea>
+    <label class="form-label" for="plot">Plot</label>
+  </div>
+
+  <!-- Checkbox -->
+  <div class="form-check d-flex justify-content-center mb-4">
+    <input class="form-check-input me-2" type="checkbox" value="" id="form6Example8" checked />
+    <label class="form-check-label" for="form6Example8"> Create an account? </label>
+  </div>
+
+  <!-- Submit button -->
+  <button type="submit" id="button" class="btn btn-primary btn-block mb-4">Add Movie</button>
+</form>
+

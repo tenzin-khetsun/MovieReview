@@ -1,13 +1,7 @@
-﻿using System.Diagnostics;
-using System.Text.Json.Serialization;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using MovieReview.Models;
-using RestSharp;
-using Newtonsoft.Json;
 using CinePhile.Database;
 using MongoDB.Driver;
-using Azure;
-using Microsoft.AspNetCore.Authorization;
 
 namespace MovieReview.Controllers;
 
@@ -19,7 +13,7 @@ public class HomeController : Controller
     {
         _movieService = movieService;
     }
-    public async Task<IActionResult> Index(int page=1, int pageSize=10)
+    public async Task<IActionResult> Index(int page=1, int pageSize=100)
     {
         int skip = (page-1)*pageSize;
         var movies = await _movieService.Movies().Find(_=>true)

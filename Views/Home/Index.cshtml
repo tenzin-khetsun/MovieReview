@@ -1,10 +1,30 @@
-﻿@model List<Api>
+﻿@model List<Movie>
 <head>
     <link rel="stylesheet" href="~/wwwroot/css/site.css">
 </head>
-
-<div class="container">
-    <h1 class="mt-3">Movies</h1>
+<body>
+<div class="dropdown">
+  <button class="dropdownButton"onclick="myFunction()" class="dropbtn">Genre</button>
+  <div id="myDropdown" class="dropdown-content">
+    <a href=>Action</a>
+    <a>Adventure</a>
+    <a>Biography</a>
+    <a>Comedy</a>
+    <a>Sports</a>
+    <a></a>
+  </div>
+</div>
+<div class="dropdown">
+  <button class="dropdownButton"onclick="myFunction()" class="dropbtn">Genre</button>
+  <div id="myDropdown" class="dropdown-content">
+    <a href=>Action</a>
+    <a>Adventure</a>
+    <a>Biography</a>
+    <a>Comedy</a>
+    <a>Sports</a>
+    <a></a>
+  </div>
+</div>
     <form method="post" asp-controller="Movie" asp-action="Details">
         <div class="row">
         @foreach (var movie in Model)
@@ -12,22 +32,25 @@
             <div class="col-md-3 main">
                 <div class="card mb-4">
                     <div class = "image">
-                        <a href="@Url.Action("Details", "Movie", new{movieId = movie.imdbID})"> <img src="@movie.Poster" class="card-img-top poster" alt="Movie Poster">   </a>
+                        <a href="@Url.Action("Details", "Movie", new{movieId = movie.imdbID})"> 
+                            <img src="@movie.Poster" class="card-img-top poster" alt="Movie Poster">   
+                        </a>
                     </div>
                     
                     <div class="card-description">
-                        <p><a>Click</a>to learn more</p>
+                      
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">@movie.Title</h5>
                         <p class="card-text">
                             <strong>Year:</strong> @movie.Year<br>
+                            <strong>Rated:</strong> @movie.Rated<br>
                             <strong>Director:</strong> @movie.Director
                             <br>
                             @movie.Plot
                             <br>
                             
-                            <footer> <a>Reviews</a></footer>
+                           
                         </p>
                     </div>
                 </div>
@@ -38,6 +61,8 @@
     </form>
     
 </div>
+<script src="~/js/site.js" asp-append-version="true"></script>
+</body>
 
 
 

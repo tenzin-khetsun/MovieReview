@@ -1,8 +1,14 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace MovieReview.Models{
+    
+
     public class User {
         
         [BsonId]
@@ -15,7 +21,10 @@ namespace MovieReview.Models{
         [BsonElement("password")]
         public required string? UserPassword { get; set; }
          [BsonElement("role")]
-        public string Role { get; set; } = "user";
+        public string? Role { get; set; } = "User";
   
     }
+    
+    
+    
 }
