@@ -12,6 +12,9 @@ namespace MovieReview.Models{
         public string? imdbID { get; set; }
         [BsonElement("User name")]
         public string? ReviewUser { get; set; }
+
+        [BsonElement("Email")]
+        public required string  ReviewEmail { get; set; }
         [BsonElement("Ratings")]
         public int Ratings { get; set; }
         [BsonElement("Content")]

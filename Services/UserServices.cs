@@ -19,9 +19,13 @@ namespace MovieReview.Services{
 
         //Generating token
         private string CreateToken(User user){
+            if(user==null){
+                return "false";
+            }
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, user.UserName),
+                // new Claim(ClaimTypes.Email, user.UserEmail!)
             };
             if(user.Role=="Admin"){
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
@@ -81,6 +85,8 @@ namespace MovieReview.Services{
             else if(request.UserPassword==valid.UserPassword){
                 var token = CreateToken(valid);
                 _httpContextAccessor?.HttpContext?.Response.Cookies.Append("Token",token,cookiesOption);
+                _httpContextAccessor?.HttpContext?.Response.Cookies.Append("Email",request.UserEmail,cookiesOption);
+
                 // var user = _users.Users().Find(u => u.UserEmail == request.UserEmail).FirstOrDefault();
                 return true;
             }
@@ -94,7 +100,7 @@ namespace MovieReview.Services{
                 Expires = DateTime.Now.AddMinutes(-1),
             };
             _httpContextAccessor?.HttpContext?.Response.Cookies.Delete("Token");
-            _httpContextAccessor?.HttpContext?.Response.Cookies.Delete("Role");
+            _httpContextAccessor?.HttpContext?.Response.Cookies.Delete("Email");
             return true;
         }
         public bool RegisterMethod(User request){

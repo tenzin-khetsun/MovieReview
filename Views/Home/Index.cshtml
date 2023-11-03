@@ -1,36 +1,61 @@
 ﻿@model List<Movie>
+
 <head>
     <link rel="stylesheet" href="~/wwwroot/css/site.css">
 </head>
-<body>
-<div class="dropdown">
-  <button class="dropdownButton"onclick="myFunction()" class="dropbtn">Genre</button>
-  <div id="myDropdown" class="dropdown-content">
-    <a href=>Action</a>
-    <a>Adventure</a>
-    <a>Biography</a>
-    <a>Comedy</a>
-    <a>Sports</a>
-    <a></a>
-  </div>
+<body style="background-color: #393E46">
+<div class="heading" style="position:relative; padding-top:3rem; ">
+    <h1 class="main-heading" style="font-size:3.2rem; color:#c21414"><i class="fa-solid fa-tv fa-lg" style="color:#ae1e1e"></i>  MovieReview</h1>
 </div>
-<div class="dropdown">
-  <button class="dropdownButton"onclick="myFunction()" class="dropbtn">Genre</button>
-  <div id="myDropdown" class="dropdown-content">
-    <a href=>Action</a>
-    <a>Adventure</a>
-    <a>Biography</a>
-    <a>Comedy</a>
-    <a>Sports</a>
-    <a></a>
-  </div>
-</div>
+<form method="get" asp-controller="Home" asp-action="Index">
+<div class="row">
+    <div class="col-md-1">
+    
+        <div class="genre-dropdown">
+            <button class="dropdown-toggle" type="button" id="genreDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Genres
+            </button>
+            <div class="dropdown-menu" aria-labelledby="genreDropdown">
+                @foreach (var genre in ViewBag.GenreList)
+                {
+                    <label class="dropdown-item">
+                        <input type="checkbox" name="selectedGenres" value=@genre /> @genre
+                    </label>
+                }
+            </div>
+        </div>
+     
+    </div>
+    <div class="col-md-1">  
+            <div class="genre-dropdown">
+                <button class="dropdown-toggle" type="button" id="genreDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Year
+                </button>
+                <div class="dropdown-menu" aria-labelledby="genreDropdown">
+                    
+                        <label class="dropdown-item">
+                            <input type="number" name="selectedYear"/> Year
+                        </label>
+                        
+                    </div>
+                </div>
+        </div> 
+        <div class="col-md-1">
+            <button class="btn btn-primary" asp-action="Index" asp-controller="Home">Search</button>
+        </div> 
+    </div>
+</form>
+        
+
+
+    
+    <div style="padding: 5rem 1rem">
     <form method="post" asp-controller="Movie" asp-action="Details">
         <div class="row">
         @foreach (var movie in Model)
         {
             <div class="col-md-3 main">
-                <div class="card mb-4">
+                <div class="card mb-4" style="border:0px;">
                     <div class = "image">
                         <a href="@Url.Action("Details", "Movie", new{movieId = movie.imdbID})"> 
                             <img src="@movie.Poster" class="card-img-top poster" alt="Movie Poster">   
@@ -40,13 +65,14 @@
                     <div class="card-description">
                       
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style= "background-color:#F0F5F9">
                         <h5 class="card-title">@movie.Title</h5>
-                        <p class="card-text">
+                        <p class="card-text" >
                             <strong>Year:</strong> @movie.Year<br>
                             <strong>Rated:</strong> @movie.Rated<br>
                             <strong>Director:</strong> @movie.Director
                             <br>
+                            <hr>
                             @movie.Plot
                             <br>
                             
@@ -59,10 +85,15 @@
     </div>
 
     </form>
+    </div>
     
 </div>
-<script src="~/js/site.js" asp-append-version="true"></script>
 </body>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
 
 
 

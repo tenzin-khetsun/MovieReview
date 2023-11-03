@@ -22,62 +22,97 @@ namespace MovieReview.Services
             var result = _DBcontext.Movies().Find(filter).ToList();
             return result;
         }
-        public List<Movie> SearchByGenre(string genre){
-            var filter = Builders<Movie>.Filter.Regex("Genre",new BsonRegularExpression(genre,"i") );
-            var result = _DBcontext.Movies().Find(filter).ToList();
-            return result;
+
+        public List<Movie> FilterMoviesByGenre(List<string> genres)
+        {
+            FilterDefinition<Movie> MovieFilter = Builders<Movie>.Filter.Empty;
+            //var result = genres.ToString();
+            foreach(var item in genres)
+            {
+                var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(item, "i"));
+                MovieFilter = MovieFilter & GenreFilter;
+            }
+            if(MovieFilter == Builders<Movie>.Filter.Empty)
+            {
+                return new List<Movie>();
+            }
+            else
+            {
+                return _DBcontext.Movies().Find(MovieFilter).ToList();
+            }
         }
-        public List<Movie> SearchByYear(int year){
+        public List<Movie> FilterMoviesByYear(int year){
             var filter = Builders<Movie>.Filter.Eq("Year", year);
             var result = _DBcontext.Movies().Find(filter).ToList();
             return result;
         }
-        public List<Movie> GetByRequestandGenre(string request, string genre)
+        // public FilterDefinition<Movie> someGenre(List<string> genres)
+        // {
+        //     FilterDefinition<Movie> MovieFilter = Builders<Movie>.Filter.Empty;;
+        //     //var result = genres.ToString();
+        //     foreach(var item in genres)
+        //     {
+        //         var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(item, "i"));
+        //         MovieFilter = MovieFilter & GenreFilter;
+        //     }
+        //     return MovieFilter;
+        // }
+  
+        
+        // public List<Movie> FilterMoviesByRequestAndGenre(string request, List<string> genre)
+        // {
+        //     var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
+        //     var GenreFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(genre, "i"));
+        //     var MovieFilter = SearchFilter & GenreFilter;
+        //     var result = _DBcontext.Movies().Find(MovieFilter).ToList();
+        //     return result;
+        // }
+        // public List<Movie> FilterMoviesByRequestAndYear(string request, int year)
+        // {
+        //     var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
+        //     var YearFilter = Builders<Movie>.Filter.Eq("Year", year);
+        //     var MovieFilter = SearchFilter & YearFilter;
+        //     var result = _DBcontext.Movies().Find(MovieFilter).ToList();
+        //     return result;
+        // }
+        public List<Movie> FilterMoviesByGenreAndYear(List<string> genres, int year)
         {
-            var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
-            var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(genre, "i"));
-            var MovieFilter = SearchFilter & GenreFilter;
-            var result = _DBcontext.Movies().Find(MovieFilter).ToList();
-            return result;
-        }
-        public List<Movie> GetByRequestandYear(string request, int year)
-        {
-            var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
-            var YearFilter = Builders<Movie>.Filter.Eq("Year", year);
-            var MovieFilter = SearchFilter & YearFilter;
-            var result = _DBcontext.Movies().Find(MovieFilter).ToList();
-            return result;
-        }
-        public List<Movie> GetByGenreandYear(string genre, int year)
-        {
-            var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(genre, "i"));
+            var GenreFilter = someGenre(genres);
             var YearFilter = Builders<Movie>.Filter.Eq("Year", year);
             var MovieFilter = GenreFilter & YearFilter;
             var result = _DBcontext.Movies().Find(MovieFilter).ToList();
             return result;
         }
-        public List<Movie> GetAll(string request, string genre, string Year)
-        {
-            var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
-            var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(genre, "i"));
-            var YearFilter = Builders<Movie>.Filter.Regex("Year", new BsonRegularExpression(Year, "i"));
-            var MovieFilter = SearchFilter & GenreFilter & YearFilter;
-            var result = _DBcontext.Movies().Find(MovieFilter).ToList();
-            return result;
-        }
-            
-        
-        public ViewPage MovieDetailsMethod(string movieId){
+
+    public FilterDefinition<Movie> someGenre(List<string> genres)
+    {
+            FilterDefinition<Movie> MovieFilter = Builders<Movie>.Filter.Empty;;
+            foreach(var item in genres)
+            {
+                var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(item, "i"));
+                MovieFilter = MovieFilter & GenreFilter;
+            }
+            return MovieFilter;
+    }
+
+    // public List<Movie> FilterAllThree(string request, List<string> genre, int Year)
+    // {
+    //     var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
+    //     var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(genre.ToString(), "i"));
+    //     var YearFilter = Builders<Movie>.Filter.Eq("Year", Year);
+
+    //     var MovieFilter = SearchFilter & GenreFilter & YearFilter;
+    //     var result = _DBcontext.Movies().Find(MovieFilter).ToList();
+    //     return result;
+    // }
+
+
+    public ViewPage MovieDetailsMethod(string movieId){
             var results = _DBcontext.Movies().Find(x => x.imdbID == movieId).FirstOrDefault(); 
             var imdbID = results.imdbID;
             if(results==null){
                 Console.WriteLine("result is empty");
             }
-
-
-            
-            
-
             ViewPage viewPage = new ViewPage{
                 movies = results,
                 reviews = _DBcontext.Review().Find(x=>x.imdbID==imdbID).ToList()

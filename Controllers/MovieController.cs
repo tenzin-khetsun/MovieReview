@@ -17,10 +17,13 @@ namespace MovieReview.Controllers{
             _userService = userService;
             _configuration = configuration;
         }
+
        
         public IActionResult Index(){
+
             return View();
         }
+
         
         public IActionResult Search(string query){
             
@@ -31,9 +34,13 @@ namespace MovieReview.Controllers{
             else{
                 return Content("Movie not there in Db");
             }
-            
-            
         }
+
+            
+
+        
+
+
         public IActionResult Details(string movieId)
         {
             
@@ -46,13 +53,12 @@ namespace MovieReview.Controllers{
             Api MovieFromApi = JsonConvert.DeserializeObject<Api>(response.Content);
             string imdbRating = MovieFromApi.imdbRating;
             List<Rating> publicRating = MovieFromApi.Ratings;
-            System.Console.WriteLine(imdbRating);
-            // List<string> publicRating = MovieFromApi.Ratings;
             ViewBag.ImdbRating = imdbRating;
             ViewBag.publicRating = publicRating;
             var req = _movieService.MovieDetailsMethod(movieId);
             return View(req);
         }
+
 
         public IActionResult AddMovie(){
             if(Request.Cookies.ContainsKey("Token")){

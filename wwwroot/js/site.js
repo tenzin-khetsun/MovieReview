@@ -36,22 +36,56 @@ $(function(){
   });
 });
 
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
+
 
 
 // Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
+
+document.addEventListener('DOMContentLoaded', function () {
+  (function () {
+      let sr = document.querySelectorAll('.fa-star');
+      let i = 0;
+      let cs = 0;
+      while (i < sr.length) {
+          sr[i].addEventListener('click', function () {
+              cs = parseInt(this.getAttribute("data-star"));
+              document.getElementById('rating').value = cs;
+              document.getElementById(i).style.color = "red";
+
+          })
+          i++;
       }
+  })();
+  $(".fa-star").on('click', function () {
+      for (let i = 0; i <= 4; i++) {
+          document.getElementById(i).style.color = "";
+      }
+      for (let i = 0; i <= this.id; i++) {
+          document.getElementById(i).style.color = "#f1cc37";
+      }
+  });
+});
+
+
+    $(document).ready(function () {
+        $('input[name="selectedGenres"]').change(function () {
+            updateSelectedGenres();
+        });
+    });
+
+    function updateSelectedGenres() {
+        var selectedGenres = [];
+        $('input[name="selectedGenres"]:checked').each(function () {
+            selectedGenres.push($(this).val());
+        });
+
+        var genreDropdown = document.getElementById("genreDropdown");
+        if (selectedGenres.length > 0) {
+            genreDropdown.innerText = "Selected Genres: " + selectedGenres.join(", ");
+        } else {
+            genreDropdown.innerText = "Select Genres";
+        }
     }
-  }
-}
+
+
 

@@ -24,6 +24,7 @@ namespace MovieReview.Services{
                 Review review = new(){
                 imdbID = request.imdbID,
                 ReviewUser = getusername(_httpContextAccessor?.HttpContext?.Request.Cookies["Token"]!),
+                ReviewEmail = _httpContextAccessor?.HttpContext?.Request.Cookies["Email"]!,
                 Ratings = request.Ratings,
                 Content = request.Content,
                 CreatedAt = DateTime.Now,
@@ -33,7 +34,7 @@ namespace MovieReview.Services{
             return review;
             }
             catch(Exception ex){
-                Console.WriteLine("Cannot insert review data");
+                Console.WriteLine("Cannot insert review data" +ex.Message);
                 return null;
             }
         
@@ -50,7 +51,7 @@ namespace MovieReview.Services{
                 return false;
             }
         }
-        private string? getusername(string token)
+        private string getusername(string token)
         {
         
         
@@ -73,6 +74,6 @@ namespace MovieReview.Services{
  
             return name;
         }
-
     }
 }
+       

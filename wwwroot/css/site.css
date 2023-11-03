@@ -40,7 +40,16 @@ body {
 .card {
   display: flex;
   flex-direction: column;
+  box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   height: 100%;
+  border-radius: 10px;
+}
+.details-img{
+  border-radius:6px;
+  box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.top-container{
+  padding: 5rem 3rem;
 }
 
 .card-body {
@@ -55,7 +64,9 @@ body {
 .main{
   padding: 20px 10px
 }
-
+.mid-container{
+  padding :0 3rem;
+}
 .animated {
   -webkit-transition: height 0.2s;
   -moz-transition: height 0.2s;
@@ -107,7 +118,19 @@ body {
   border-radius: 6px;
   
 }
-
+.star-rating {
+  color: #bebebe;
+  font-size: 2em;
+}
+.fa-star {
+  cursor: pointer;
+}
+.is-active {
+  color: #f1cc37;
+}
+.fa-star:not(.is-active):hover {
+  color: #f1cc37;
+}
 .dropdown-content a:hover {background-color: #ddd;}
 
 .dropbtn {
@@ -117,6 +140,24 @@ body {
   font-size: 16px;
   border: none;
   cursor: pointer;
+}
+.icon-star{
+  color:#f1cc37
+}
+.NavBar{
+  color: #00A9FF;
+}
+.main-heading {
+  font-family: Impact, Haettenschweiler, "Franklin Gothic Bold", Charcoal, "Helvetica Inserat", "Bitstream Vera Sans Bold", "Arial Black", "sans serif";
+  /* font-weight: 900;
+  line-height: 5.4px; */
+}
+.logo-heading{
+  font-family: Impact, Haettenschweiler, "Franklin Gothic Bold", Charcoal, "Helvetica Inserat", "Bitstream Vera Sans Bold", "Arial Black", "sans serif";
+
+}
+.dropdown-toggle {
+  width: 100px; /* Adjust the width as needed */
 }
 
 .dropbtn:hover, .dropbtn:focus {
