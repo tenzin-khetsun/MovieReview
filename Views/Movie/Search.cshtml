@@ -1,42 +1,35 @@
 @model IEnumerable<Movie>;
 @{ ViewData["Title"] = "Movies";
 }
-
-
-    @foreach(var movie in Model){
-        <div class="col-md-6">
-    <hr>   
-                <img style="height :300px; width :200px;" src="@movie.Poster" alt="Movie Poster" class="img-fluid">
-            
+@foreach(var movie in Model){
+    <div class="col-md-6 search-img">
+        <img src="@movie.Poster" alt="Movie Poster" class="img-fluid">
+        
+    </div>
+    <div class="search-container">
+        <h1 class="Title">@movie.Title</h1>
+            @* <h1> IMDB Ratings: @Model.</h1> *@
+        <div class="Content">
+            <h5>@movie.Year</h5>
+            <h5>@movie.Rated</h5>
+                @* <h3>Language: @Model</h3> *@
+            <h3>Actors: </h3><h5>@movie.Actors</h5>
+            <h3>Ratings: 
+                    @foreach(var ratings in Model){
+                        <ul><li>@ratings.: </li></ul>
+                    }
+            </h3>
             <hr>
         </div>
-        <div class="container">
-        <h1 class="Title">Movie Name:@movie.Title</h1>
-            @* <h1> IMDB Ratings: @Model.</h1> *@
-            <div class="Content">
-                
-                <h3>Released: @movie.Year</h3>
-                <h3>Rated: @movie.Rated</h3>
-                @* <h3>Language: @Model</h3> *@
-                <h3>Actor: @movie.Actors</h3>
-                <h3>Made in: null</h3>
-                <h3>Ratings: 
-                    @* @foreach(var ratings in @Model.Ratings){
-                        <ul><li>@ratings.Source: @ratings.Value</li></ul>
-                    } *@
-                    </h3>
-                <hr>
-            </div>
-            <div class="Summary">
-                <h4>
-                Summary
-                </h4>
-                <p>@movie.Plot</p>
-                <hr>
-            </div class = "Review">
-            </div>
-    }
-   }
+        <div class="Summary">
+            <h4>Summary</h4>
+            <p>@movie.Plot</p>
+            <hr>
+        </div class = "Review">
+    </div>
+}
+
+
            
         
         

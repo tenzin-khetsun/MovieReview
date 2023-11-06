@@ -77,11 +77,7 @@
             <p><strong>IMDB Ratings: </strong>@ViewBag.ImdbRating </p>
             <p><strong>Year:</strong> @Model.movies.Year</p>
             <p><strong>Rated:</strong> @Model.movies.Rated</p>
-            @foreach(var item in @Model.movies.Genre)
-            {
-                <p><strong>Genre:</strong> @item</p>
-            }
-
+            <p><strong>Genre:</strong> @Model.movies.Genre</p>
             <p><strong>Director:</strong> @Model.movies.Director</p>
             <p><strong>Actors:</strong> @Model.movies.Actors</p>
             <ul>
@@ -91,6 +87,8 @@
             </ul>
             <p><strong>Plot: </strong>@Model.movies.Plot</p> 
         </div>
+            
+
     
 
 
@@ -98,7 +96,7 @@
             <h1 style="color:#1B262C">Reviews</h1>
         </div>
         @foreach(var review in Model.reviews){
-            <ul>
+            <ul  style="list-style-type: none">
                 <li>
                     <div class="card" style="width: 30rem;">
                         <div class="card-body">
@@ -125,7 +123,7 @@
         }
     }
     <div class="container">
-	    <div class="row" style="margin-top:40px;">
+	    <div class="row" style="margin:3rem 1rem;">
 		    <div class="col-md-6">
     	        <div class="well well-sm">
                     <div class="text-right">

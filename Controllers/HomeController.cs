@@ -10,14 +10,12 @@ public class HomeController : Controller
 {
     private readonly IDatabase _DbContext;
     private readonly IMovie _movies;
-
     public HomeController(IDatabase DbContext, IMovie movies)
     {
         _DbContext = DbContext;
         _movies = movies;
     }
-    public async Task<IActionResult> Index(List<string> selectedGenres, int selectedYear)
-
+    public async Task<IActionResult> Index(List<string> selectedGenres, int selectedYear, string query)
     {   
         List<string> genreList = new List<string>{
             "Action",
@@ -47,40 +45,27 @@ public class HomeController : Controller
             "War",
             "Western"
         };
-        
         ViewBag.GenreList = genreList;
-            if(selectedGenres.Count!=0){
-                if(selectedYear>1900){
-                    var filteredMovies = _movies.FilterMoviesByGenreAndYear(selectedGenres, selectedYear);
-                    return View(filteredMovies);
-                }
-                else{
-                    var filteredMovies = _movies.FilterMoviesByGenre(selectedGenres);
-                }
+            if(query!=null){
+                var filterMovies = _movies.SearchMethod(query);
+                return View(filterMovies);
             }
+            if(selectedGenres.Count!=0 && selectedYear>1900){
+                var filteredMovies = _movies.FilterMoviesByGenreAndYear(selectedGenres, selectedYear);
+                return View(filteredMovies);
+                }
             else if(selectedGenres.Count==0 && selectedYear>1900){
                 var filteredMovies = _movies.FilterMoviesByYear(selectedYear);
+                return View(filteredMovies);
             }
-           
+            else if(selectedGenres.Count!=0 && selectedYear<=1900){
+                var filteredMovies = _movies.FilterMoviesByGenre(selectedGenres);
+                return View(filteredMovies);
+            }
+            else{
             var movies = await _DbContext.Movies().Find(_=>true).ToListAsync();
             return View(movies);  
-            
-
-        // if( selectedGenres.Count!=0 && selectedYear!=0 ){
-        //     var filteredMovies = _movies.FilterMoviesByGenreAndYear(selectedGenres, selectedYear);
-        //     return View(filteredMovies);
-        // }
-        // else if(selectedYear!=0){
-        //     var filteredMovies = _movies.FilterMoviesByYear(selectedYear);
-        //     return View(filteredMovies);
-        // } 
-        // else if(selectedGenres.Count!=0){
-        //     var filteredMovies = _movies.FilterMoviesByGenre(selectedGenres);
-        //     return View(filteredMovies);
-        // } 
-        // else{
-        //     
-        // }
+            }
     }
 
 
@@ -94,10 +79,3 @@ public class HomeController : Controller
     }
 
 }
-        
-        
-
-        
-        
-
-

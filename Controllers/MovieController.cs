@@ -20,27 +20,18 @@ namespace MovieReview.Controllers{
 
        
         public IActionResult Index(){
-
             return View();
         }
-
-        
         public IActionResult Search(string query){
-            
             var movieSearch =  _movieService.SearchMethod(query);
             if(movieSearch!=null){
-                return View(movieSearch);
+                return View(movieSearch);   
             }
             else{
                 return Content("Movie not there in Db");
             }
         }
-
-            
-
         
-
-
         public IActionResult Details(string movieId)
         {
             
@@ -58,7 +49,6 @@ namespace MovieReview.Controllers{
             var req = _movieService.MovieDetailsMethod(movieId);
             return View(req);
         }
-
 
         public IActionResult AddMovie(){
             if(Request.Cookies.ContainsKey("Token")){
@@ -86,4 +76,14 @@ namespace MovieReview.Controllers{
 
     }
 }
+        
+            
+
+            
+
+        
+
+
+
+
 

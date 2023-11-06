@@ -27,7 +27,7 @@ namespace MovieReview.Models{
         [BsonElement("Year")]
         public int Year { get; set; }  
         [BsonElement("genre")]      
-        public List<string>? Genre { get; set; }
+        public string? Genre { get; set; }
         [BsonElement("director")]
         public string? Director { get; set; }
         [BsonElement("actors")]

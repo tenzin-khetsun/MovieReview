@@ -71,17 +71,17 @@
                                 <a class="nav-link text-light" asp-area="" asp-controller="Movie" asp-action="AddMovie">Add Movie</a>
                             </li>
                         }
-                        @if(ValidateToken(tokenCookies)!=null){
                            <li class="nav-item " style="padding-top:10px">
                             <div >
-                            @using (Html.BeginForm("Search", "Movie", FormMethod.Get))
+                            @using (Html.BeginForm("Index", "Home", FormMethod.Get))
                             {
                             <input class="rounded" type="text" name="query" placeholder="Search movies">
                             <button class="btn btn-primary btn-sm"type="submit">Search</button>
                             }
                             </div>
                         </li> 
-                        }
+                        
+                        
                         
                         @if(tokenCookies==null)
                         {

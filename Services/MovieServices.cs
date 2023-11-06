@@ -15,18 +15,25 @@ namespace MovieReview.Services
         public MovieService(IDatabase DBcontext){
             _DBcontext = DBcontext;
         }
-
         public List<Movie> SearchMethod(string query){
-            var filter = Builders<Movie>.Filter.Or(
-            Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(query, "i")));
-            var result = _DBcontext.Movies().Find(filter).ToList();
+            List<Movie> result = new();
+            var filters = new List<FilterDefinition<Movie>>
+            {
+                Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(query, "i")),
+                Builders<Movie>.Filter.Regex("Actor", new BsonRegularExpression(query, "i")),
+                Builders<Movie>.Filter.Regex("Director", new BsonRegularExpression(query, "i"))
+            };
+            if (filters.Count > 0)
+            {
+                var combinedFilter = Builders<Movie>.Filter.Or(filters);
+                result = _DBcontext.Movies().Find(combinedFilter).ToList();
+            }
             return result;
         }
 
         public List<Movie> FilterMoviesByGenre(List<string> genres)
         {
             FilterDefinition<Movie> MovieFilter = Builders<Movie>.Filter.Empty;
-            //var result = genres.ToString();
             foreach(var item in genres)
             {
                 var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(item, "i"));
@@ -46,35 +53,6 @@ namespace MovieReview.Services
             var result = _DBcontext.Movies().Find(filter).ToList();
             return result;
         }
-        // public FilterDefinition<Movie> someGenre(List<string> genres)
-        // {
-        //     FilterDefinition<Movie> MovieFilter = Builders<Movie>.Filter.Empty;;
-        //     //var result = genres.ToString();
-        //     foreach(var item in genres)
-        //     {
-        //         var GenreFilter = Builders<Movie>.Filter.Regex("Genre", new BsonRegularExpression(item, "i"));
-        //         MovieFilter = MovieFilter & GenreFilter;
-        //     }
-        //     return MovieFilter;
-        // }
-  
-        
-        // public List<Movie> FilterMoviesByRequestAndGenre(string request, List<string> genre)
-        // {
-        //     var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
-        //     var GenreFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(genre, "i"));
-        //     var MovieFilter = SearchFilter & GenreFilter;
-        //     var result = _DBcontext.Movies().Find(MovieFilter).ToList();
-        //     return result;
-        // }
-        // public List<Movie> FilterMoviesByRequestAndYear(string request, int year)
-        // {
-        //     var SearchFilter = Builders<Movie>.Filter.Regex("Title", new BsonRegularExpression(request, "i"));
-        //     var YearFilter = Builders<Movie>.Filter.Eq("Year", year);
-        //     var MovieFilter = SearchFilter & YearFilter;
-        //     var result = _DBcontext.Movies().Find(MovieFilter).ToList();
-        //     return result;
-        // }
         public List<Movie> FilterMoviesByGenreAndYear(List<string> genres, int year)
         {
             var GenreFilter = someGenre(genres);
